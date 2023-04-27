@@ -30,20 +30,21 @@ class ProgDef():
         def da_ca_(x):
             Ca  =  (self.E/(1-self.nu**2))* jnp.array([[1,self.nu,0],[self.nu,1,0],[0,0,(1-self.nu)/2]]).reshape(-1,order='F');
             da = Ca.reshape(3,3,order='F') @jnp.array([1,1,0]).reshape(-1,1)
-            da_ = jnp.dot(x.reshape(-1,1),da.T).T; # linear interpolation
-            Ca_ = jnp.dot(jnp.ones((self.nel,1)),Ca.reshape(1,-1,order='F')).T # power order interpolation
+            da_ = jnp.dot(x.reshape(-1,1,order='F'),da.T).T; # linear interpolation
+            Ca_ = jnp.dot(jnp.ones((self.nel,1)),Ca.reshape(1,-1,order='F')).T 
             return da_, Ca_
         
         def sK_sA(da_,Ca_):
-            Ke = implicit_Ke(Ca_)
-            Ae = implicit_Ae(da_)
-            return Ke, Ae
+            sK = implicit_Ke(Ca_)
+            sA = implicit_Ae(da_)
+            return sK, sA
             
         def K_A(sK,sA):
             K = jnp.zeros((self.ndof,self.ndof))
             A = jnp.zeros((self.ndof,(self.nelx+1)*(self.nely+1)));
             K = K.at[(self.iK,self.jK)].add(sK.flatten('F'))
             A = A.at[(self.iA,self.jA)].add(sA.flatten('F'))  
+            
             return K,A
         
         def Kuf(K,A):
@@ -178,5 +179,10 @@ plt.xlabel('Ux')
 plt.legend(['target','optimized'])
 plt.show()
 
+
+plt.figure()
+plt.imshow(x.reshape(nelx,nelx), 'jet')
+plt.colorbar()
+plt.show()
 
 

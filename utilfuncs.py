@@ -223,6 +223,8 @@ def stiffindex4AK(nx,ny):
     n2 = n2.reshape(-1,1,order='F')
     edof4 = np.c_[n1+1, n2+1, n2, n1]
     edof8 = np.c_[2*n1+1, 2*n1+2, 2*n2+1, 2*n2+2, 2*n2-1, 2*n2, 2*n1-1, 2*n1]
+    
+    # it is adjust for jax 
     iK =tuple( ((np.kron(edof8, np.ones((8, 1)))).T - 1).flatten('F').astype(int))
     jK = tuple(((np.kron(edof8, np.ones((1, 8)))).T - 1).flatten('F').astype(int))
     iA = tuple(((np.kron(edof8, np.ones((4, 1)))).T - 1).flatten('F').astype(int))
