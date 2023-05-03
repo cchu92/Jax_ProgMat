@@ -234,3 +234,12 @@ def stiffindex4AK(nx,ny):
     # iA = ((np.kron(edof8, np.ones((4, 1)))).T - 1).flatten('F')
     # jA = ((np.kron(edof4, np.ones((1, 8)))).T - 1).flatten('F') 
     return iK, jK, iA,jA
+
+
+def unknow_degree(nelx,nely):
+    alldof = np.arange(0, 2*(nelx+1)*(nely+1));
+    fix_left = np.arange(0, 2*(nely+1), 1);
+    unknown = np.setdiff1d(alldof, fix_left);
+    unknown = jnp.array(unknown);
+
+    return unknown
